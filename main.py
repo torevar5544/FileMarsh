@@ -43,9 +43,13 @@ def main():
     font = QFont("Segoe UI" if sys.platform == "win32" else "Ubuntu", 10)
     app.setFont(font)
     
-    # Enable high DPI scaling
-    app.setAttribute(Qt.ApplicationAttribute.AA_EnableHighDpiScaling)
-    app.setAttribute(Qt.ApplicationAttribute.AA_UseHighDpiPixmaps)
+    # Enable high DPI scaling (if available)
+    try:
+        app.setAttribute(Qt.ApplicationAttribute.AA_EnableHighDpiScaling, True)
+        app.setAttribute(Qt.ApplicationAttribute.AA_UseHighDpiPixmaps, True)
+    except AttributeError:
+        # These attributes may not be available in all PyQt6 versions
+        pass
     
     try:
         # Create and show main window
