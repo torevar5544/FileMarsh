@@ -26,6 +26,10 @@ args = "desktop_app"
 task = "workflow.run"
 args = "File Organizer VNC"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "File Organizer GUI"
+
 [[workflows.workflow]]
 name = "File Organizer App"
 author = "agent"
@@ -52,6 +56,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "pip install PyQt6 && DISPLAY=:0 python main.py"
+
+[workflows.workflow.metadata]
+outputType = "vnc"
+
+[[workflows.workflow]]
+name = "File Organizer GUI"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "export DISPLAY=:0 && python main.py"
 
 [workflows.workflow.metadata]
 outputType = "vnc"
