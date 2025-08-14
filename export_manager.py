@@ -86,7 +86,7 @@ class ExportManager:
     
     def export_files(self, analysis_result: AnalysisResult, export_path: str, 
                     move_files: bool = False, preserve_structure: bool = True,
-                    selected_types: List[str] = None, progress_callback=None) -> Tuple[int, int]:
+                    selected_extensions: List[str] = None, progress_callback=None) -> Tuple[int, int]:
         """Export files based on analysis results."""
         export_path = Path(export_path)
         
@@ -96,15 +96,16 @@ class ExportManager:
         # Collect files to export
         files_to_export = []
         
-        if selected_types is None:
+        if selected_extensions is None:
             # Export all files
             for file_type, files in analysis_result.files_by_type.items():
                 files_to_export.extend(files)
         else:
-            # Export only selected types
-            for file_type in selected_types:
-                if file_type in analysis_result.files_by_type:
-                    files_to_export.extend(analysis_result.files_by_type[file_type])
+            # Export only files with selected extensions
+            for file_type, files in analysis_result.files_by_type.items():
+                for file_info in files:
+                    if file_info.extension.lower() in [ext.lower() for ext in selected_extensions]:
+                        files_to_export.append(file_info)
         
         total_files = len(files_to_export)
         exported_count = 0
@@ -164,14 +165,14 @@ class ExportWorker(QThread):
     
     def __init__(self, analysis_result: AnalysisResult, export_path: str, 
                  move_files: bool, preserve_structure: bool, export_manager: ExportManager,
-                 selected_types: List[str] = None):
+                 selected_extensions: List[str] = None):
         super().__init__()
         self.analysis_result = analysis_result
         self.export_path = export_path
         self.move_files = move_files
         self.preserve_structure = preserve_structure
         self.export_manager = export_manager
-        self.selected_types = selected_types
+        self.selected_extensions = selected_extensions
     
     def run(self):
         """Run the export operation in background thread."""
@@ -190,7 +191,7 @@ class ExportWorker(QThread):
                 self.export_path,
                 self.move_files,
                 self.preserve_structure,
-                self.selected_types,
+                self.selected_extensions,
                 progress_callback
             )
             

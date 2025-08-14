@@ -206,6 +206,55 @@ class FileOrganizerMainWindow(QMainWindow):
         
         settings_layout.addLayout(options_layout)
         
+        # File type selection section
+        type_selection_group = QGroupBox("Select File Types to Export")
+        type_selection_layout = QVBoxLayout(type_selection_group)
+        
+        # Create checkboxes for different file extensions
+        self.file_type_checkboxes = {}
+        
+        # Common file types organized by category
+        file_types = {
+            'Images': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp', '.svg'],
+            'Videos': ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm', '.mpg'],
+            'Audio': ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma', '.m4a', '.opus'],
+            'Documents': ['.pdf', '.doc', '.docx', '.txt', '.rtf', '.odt', '.xls', '.xlsx'],
+            'Archives': ['.zip', '.rar', '.7z', '.tar', '.gz', '.bz2'],
+            'Code': ['.py', '.js', '.html', '.css', '.cpp', '.c', '.java', '.php']
+        }
+        
+        for category, extensions in file_types.items():
+            category_layout = QHBoxLayout()
+            category_label = QLabel(f"{category}:")
+            category_label.setMinimumWidth(80)
+            category_layout.addWidget(category_label)
+            
+            for ext in extensions:
+                checkbox = QPushButton(ext)
+                checkbox.setCheckable(True)
+                checkbox.setMaximumWidth(70)
+                checkbox.setMinimumWidth(50)
+                checkbox.setProperty("file_extension", ext)
+                self.file_type_checkboxes[ext] = checkbox
+                category_layout.addWidget(checkbox)
+            
+            category_layout.addStretch()
+            type_selection_layout.addLayout(category_layout)
+        
+        # Select/Deselect all buttons for file types
+        select_buttons_layout = QHBoxLayout()
+        self.select_all_types_button = QPushButton("Select All")
+        self.select_all_types_button.clicked.connect(self.select_all_file_types)
+        select_buttons_layout.addWidget(self.select_all_types_button)
+        
+        self.deselect_all_types_button = QPushButton("Deselect All")
+        self.deselect_all_types_button.clicked.connect(self.deselect_all_file_types)
+        select_buttons_layout.addWidget(self.deselect_all_types_button)
+        select_buttons_layout.addStretch()
+        
+        type_selection_layout.addLayout(select_buttons_layout)
+        settings_layout.addWidget(type_selection_group)
+        
         # Export buttons
         button_layout = QHBoxLayout()
         
@@ -214,8 +263,8 @@ class FileOrganizerMainWindow(QMainWindow):
         self.export_all_button.setEnabled(False)
         button_layout.addWidget(self.export_all_button)
         
-        self.export_selected_button = QPushButton("Export by Type")
-        self.export_selected_button.clicked.connect(self.export_by_type)
+        self.export_selected_button = QPushButton("Export Selected Types")
+        self.export_selected_button.clicked.connect(self.export_selected_types)
         self.export_selected_button.setEnabled(False)
         button_layout.addWidget(self.export_selected_button)
         
@@ -297,6 +346,26 @@ class FileOrganizerMainWindow(QMainWindow):
             self.preserve_structure_button.setText("Preserve Folder Structure: ON")
         else:
             self.preserve_structure_button.setText("Preserve Folder Structure: OFF")
+    
+    def select_all_file_types(self):
+        """Select all file type checkboxes."""
+        for checkbox in self.file_type_checkboxes.values():
+            checkbox.setChecked(True)
+        self.log_message("Selected all file types for export")
+    
+    def deselect_all_file_types(self):
+        """Deselect all file type checkboxes."""
+        for checkbox in self.file_type_checkboxes.values():
+            checkbox.setChecked(False)
+        self.log_message("Deselected all file types")
+    
+    def get_selected_file_types(self):
+        """Get list of selected file extensions."""
+        selected_types = []
+        for ext, checkbox in self.file_type_checkboxes.items():
+            if checkbox.isChecked():
+                selected_types.append(ext)
+        return selected_types
     
     def start_analysis(self):
         """Start folder analysis in background thread."""
@@ -423,14 +492,20 @@ class FileOrganizerMainWindow(QMainWindow):
         
         self.start_export(export_all=True)
     
-    def export_by_type(self):
-        """Export files by selected types."""
+    def export_selected_types(self):
+        """Export files by selected file types."""
         if not self.current_analysis:
             QMessageBox.warning(self, "Warning", "Please analyze a folder first.")
             return
         
-        # For now, export all types - could add type selection dialog
-        self.start_export(export_all=True)
+        # Get selected file types
+        selected_types = self.get_selected_file_types()
+        if not selected_types:
+            QMessageBox.warning(self, "Warning", "Please select at least one file type to export.")
+            return
+        
+        self.log_message(f"Exporting selected file types: {', '.join(selected_types)}")
+        self.start_export(export_all=False, selected_types=selected_types)
     
     def start_export(self, export_all=True, selected_types=None):
         """Start file export operation."""
