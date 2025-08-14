@@ -4,7 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
-packages = ["mesa", "libGL", "freeglut", "libxkbcommon", "xvfb-run", "fontconfig", "zstd", "dbus", "xorg.libxcb", "xorg.libXcursor", "xorg.libXrandr", "xorg.libXrender", "glib", "xorg.xcbutil", "xorg.xcbutilwm", "xorg.xcbutilimage", "xorg.xcbutilkeysyms", "xorg.xcbutilrenderutil", "xorg.libX11"]
+packages = ["mesa", "libGL", "freeglut", "libxkbcommon", "xvfb-run", "fontconfig", "zstd", "dbus", "xorg.libxcb", "xorg.libXcursor", "xorg.libXrandr", "xorg.libXrender", "glib", "xorg.xcbutil", "xorg.xcbutilwm", "xorg.xcbutilimage", "xorg.xcbutilkeysyms", "xorg.xcbutilrenderutil", "xorg.libX11", "xorg.xcbutilcursor", "xorg.xorgserver"]
 
 [workflows]
 runButton = "Project"
