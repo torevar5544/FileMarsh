@@ -1,0 +1,21 @@
+# File Organizer - Minimal Python Dependencies
+# This application is designed to use mostly Python standard library
+# Only essential external dependencies are listed here
+
+# Core GUI Framework (required)
+PyQt6>=6.4.0
+
+# Optional: Enhanced file type detection (install if needed)
+# python-magic>=0.4.27
+
+# Optional: For advanced data analysis (install if needed)  
+# pandas>=1.5.0
+# numpy>=1.21.0
+
+# Note: Most functionality uses Python standard library:
+# - pathlib (built-in)
+# - mimetypes (built-in) 
+# - logging (built-in)
+# - csv, json (built-in)
+# - os, shutil (built-in)
+# - dataclasses (built-in)
