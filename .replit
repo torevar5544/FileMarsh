@@ -4,6 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
+packages = ["mesa", "libGL", "freeglut", "libxkbcommon", "xvfb-run", "fontconfig", "zstd"]
 
 [workflows]
 runButton = "Project"
@@ -25,12 +26,12 @@ args = "desktop_app"
 name = "File Organizer App"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pip install PyQt6 && python main.py"
-
 [workflows.workflow.metadata]
 outputType = "vnc"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install PyQt6 && xvfb-run -a python main.py"
 
 [[workflows.workflow]]
 name = "desktop_app"
