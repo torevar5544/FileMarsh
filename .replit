@@ -4,7 +4,7 @@ expertMode = true
 
 [nix]
 channel = "stable-25_05"
-packages = ["mesa", "libGL", "freeglut", "libxkbcommon", "xvfb-run", "fontconfig", "zstd", "dbus"]
+packages = ["mesa", "libGL", "freeglut", "libxkbcommon", "xvfb-run", "fontconfig", "zstd", "dbus", "xorg.libxcb", "xorg.libXcursor", "xorg.libXrandr", "xorg.libXrender", "glib", "xorg.xcbutil", "xorg.xcbutilwm", "xorg.xcbutilimage", "xorg.xcbutilkeysyms", "xorg.xcbutilrenderutil", "xorg.libX11"]
 
 [workflows]
 runButton = "Project"
@@ -21,6 +21,10 @@ args = "File Organizer App"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "desktop_app"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "File Organizer VNC"
 
 [[workflows.workflow]]
 name = "File Organizer App"
@@ -40,3 +44,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "pip install PyQt6 && python main.py"
+
+[[workflows.workflow]]
+name = "File Organizer VNC"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install PyQt6 && DISPLAY=:0 python main.py"
+
+[workflows.workflow.metadata]
+outputType = "vnc"
