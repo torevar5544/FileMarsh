@@ -5,8 +5,8 @@ Application Styles - Define consistent styling for the File Organizer applicatio
 class AppStyles:
     """Application-wide style definitions."""
     
-    # Color palette
-    COLORS = {
+    # Light theme color palette
+    LIGHT_COLORS = {
         'primary': '#2196F3',      # Blue
         'secondary': '#4CAF50',    # Green
         'warning': '#FF9800',      # Orange
@@ -20,219 +20,316 @@ class AppStyles:
         'selected': '#BBDEFB'      # Blue selection
     }
     
+    # Dark theme color palette
+    DARK_COLORS = {
+        'primary': '#BB86FC',      # Purple
+        'secondary': '#03DAC6',    # Teal
+        'warning': '#FF9800',      # Orange
+        'error': '#CF6679',        # Pink
+        'background': '#121212',   # Very dark grey
+        'text': '#FFFFFF',         # White
+        'text_secondary': '#B3B3B3',  # Light grey
+        'surface': '#1E1E1E',      # Dark grey
+        'border': '#3E3E3E',       # Medium grey
+        'hover': '#2D2D2D',        # Slightly lighter dark
+        'selected': '#3D3D3D'      # Selection grey
+    }
+    
+    # Current theme (default to light)
+    _current_theme = 'light'
+    
+    @classmethod
+    def set_theme(cls, theme: str):
+        """Set the current theme (light or dark)."""
+        if theme in ['light', 'dark']:
+            cls._current_theme = theme
+    
+    @classmethod
+    def get_theme(cls) -> str:
+        """Get the current theme."""
+        return cls._current_theme
+    
+    @classmethod
+    def get_colors(cls) -> dict:
+        """Get colors for the current theme."""
+        return cls.DARK_COLORS if cls._current_theme == 'dark' else cls.LIGHT_COLORS
+    
+    # For backward compatibility
+    @property
+    def COLORS(self):
+        return self.get_colors()
+    
     @classmethod
     def get_main_style(cls) -> str:
         """Get the main application stylesheet."""
+        colors = cls.get_colors()
+        
         return f"""
+        /* Global Font Settings */
+        * {{
+            font-family: "Segoe UI", "Ubuntu", "Roboto", "Arial", sans-serif;
+            font-size: 13px;
+        }}
+        
         /* Main Window */
         QMainWindow {{
-            background-color: {cls.COLORS['background']};
-            color: {cls.COLORS['text']};
+            background-color: {colors['background']};
+            color: {colors['text']};
         }}
         
         /* Group Boxes */
         QGroupBox {{
             font-weight: bold;
-            font-size: 12px;
-            border: 2px solid {cls.COLORS['border']};
-            border-radius: 5px;
+            font-size: 13px;
+            border: 2px solid {colors['border']};
+            border-radius: 6px;
             margin-top: 1ex;
-            padding-top: 10px;
-            background-color: {cls.COLORS['surface']};
+            padding-top: 12px;
+            background-color: {colors['surface']};
         }}
         
         QGroupBox::title {{
             subcontrol-origin: margin;
             left: 10px;
-            padding: 0 5px 0 5px;
-            color: {cls.COLORS['primary']};
+            padding: 0 6px 0 6px;
+            color: {colors['primary']};
+            font-weight: bold;
         }}
         
-        /* Buttons */
+        /* Buttons - Enhanced */
         QPushButton {{
-            background-color: {cls.COLORS['primary']};
+            background-color: {colors['primary']};
             border: none;
             color: white;
-            padding: 8px 16px;
+            padding: 10px 18px;
             text-align: center;
-            font-size: 12px;
-            border-radius: 4px;
-            min-width: 80px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            min-width: 90px;
+            min-height: 32px;
         }}
         
         QPushButton:hover {{
-            background-color: #1976D2;
+            background-color: {colors['primary']}CC;
         }}
         
         QPushButton:pressed {{
-            background-color: #0D47A1;
+            background-color: {colors['primary']}AA;
         }}
         
         QPushButton:disabled {{
-            background-color: {cls.COLORS['text_secondary']};
-            color: #FFFFFF;
+            background-color: {colors['text_secondary']};
+            color: {colors['background']};
+            opacity: 0.6;
         }}
         
         QPushButton[checkable="true"]:checked {{
-            background-color: {cls.COLORS['secondary']};
+            background-color: {colors['secondary']};
+            border: 2px solid {colors['primary']};
         }}
         
-        /* Line Edits */
+        /* Line Edits - Enhanced */
         QLineEdit {{
-            border: 2px solid {cls.COLORS['border']};
-            border-radius: 4px;
-            padding: 5px;
-            font-size: 12px;
-            background-color: {cls.COLORS['surface']};
+            border: 2px solid {colors['border']};
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: "Segoe UI", "Ubuntu", "Roboto", "Arial", sans-serif;
+            background-color: {colors['surface']};
+            color: {colors['text']};
+            min-height: 20px;
         }}
         
         QLineEdit:focus {{
-            border-color: {cls.COLORS['primary']};
+            border-color: {colors['primary']};
+            background-color: {colors['surface']};
         }}
         
-        /* Combo Boxes */
+        QLineEdit:disabled {{
+            background-color: {colors['background']};
+            color: {colors['text_secondary']};
+        }}
+        
+        /* Combo Boxes - Enhanced */
         QComboBox {{
-            border: 2px solid {cls.COLORS['border']};
-            border-radius: 4px;
-            padding: 5px;
-            font-size: 12px;
-            background-color: {cls.COLORS['surface']};
-            min-width: 100px;
+            border: 2px solid {colors['border']};
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: "Segoe UI", "Ubuntu", "Roboto", "Arial", sans-serif;
+            background-color: {colors['surface']};
+            color: {colors['text']};
+            min-width: 120px;
+            min-height: 20px;
         }}
         
         QComboBox:focus {{
-            border-color: {cls.COLORS['primary']};
+            border-color: {colors['primary']};
+        }}
+        
+        QComboBox:hover {{
+            border-color: {colors['primary']};
         }}
         
         QComboBox::drop-down {{
             border: none;
-            width: 20px;
+            width: 24px;
+            background-color: {colors['primary']};
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
         }}
         
         QComboBox::down-arrow {{
             image: none;
-            border: 5px solid {cls.COLORS['text']};
-            border-top-color: {cls.COLORS['text']};
-            border-left-color: transparent;
-            border-right-color: transparent;
-            border-bottom-color: transparent;
+            border: 6px solid transparent;
+            border-top-color: white;
+            margin-right: 6px;
         }}
         
-        /* Tables */
+        QComboBox QAbstractItemView {{
+            border: 2px solid {colors['border']};
+            background-color: {colors['surface']};
+            color: {colors['text']};
+            selection-background-color: {colors['selected']};
+            border-radius: 6px;
+        }}
+        
+        /* Tables - Enhanced */
         QTableWidget {{
-            gridline-color: {cls.COLORS['border']};
-            background-color: {cls.COLORS['surface']};
-            alternate-background-color: {cls.COLORS['background']};
-            selection-background-color: {cls.COLORS['selected']};
-            border: 1px solid {cls.COLORS['border']};
-            border-radius: 4px;
+            gridline-color: {colors['border']};
+            background-color: {colors['surface']};
+            alternate-background-color: {colors['background']};
+            selection-background-color: {colors['selected']};
+            border: 1px solid {colors['border']};
+            border-radius: 6px;
+            font-size: 13px;
+            color: {colors['text']};
         }}
         
         QTableWidget::item {{
-            padding: 5px;
+            padding: 8px;
             border: none;
         }}
         
         QTableWidget::item:selected {{
-            background-color: {cls.COLORS['selected']};
+            background-color: {colors['selected']};
+            color: {colors['text']};
+        }}
+        
+        QTableWidget::item:hover {{
+            background-color: {colors['hover']};
         }}
         
         QHeaderView::section {{
-            background-color: {cls.COLORS['primary']};
+            background-color: {colors['primary']};
             color: white;
-            padding: 8px;
+            padding: 10px;
             border: none;
             font-weight: bold;
+            font-size: 13px;
         }}
         
-        /* Tree Widget */
+        /* Tree Widget - Enhanced */
         QTreeWidget {{
-            background-color: {cls.COLORS['surface']};
-            alternate-background-color: {cls.COLORS['background']};
-            selection-background-color: {cls.COLORS['selected']};
-            border: 1px solid {cls.COLORS['border']};
-            border-radius: 4px;
+            background-color: {colors['surface']};
+            alternate-background-color: {colors['background']};
+            selection-background-color: {colors['selected']};
+            border: 1px solid {colors['border']};
+            border-radius: 6px;
+            font-size: 13px;
+            color: {colors['text']};
         }}
         
         QTreeWidget::item {{
-            padding: 3px;
+            padding: 6px;
             border: none;
         }}
         
         QTreeWidget::item:selected {{
-            background-color: {cls.COLORS['selected']};
+            background-color: {colors['selected']};
+            color: {colors['text']};
         }}
         
         QTreeWidget::item:hover {{
-            background-color: {cls.COLORS['hover']};
+            background-color: {colors['hover']};
         }}
         
-        /* Tab Widget */
+        /* Tab Widget - Enhanced */
         QTabWidget::pane {{
-            border: 1px solid {cls.COLORS['border']};
-            background-color: {cls.COLORS['surface']};
-            border-radius: 4px;
+            border: 1px solid {colors['border']};
+            background-color: {colors['surface']};
+            border-radius: 6px;
         }}
         
         QTabBar::tab {{
-            background-color: {cls.COLORS['background']};
-            border: 1px solid {cls.COLORS['border']};
-            padding: 8px 16px;
+            background-color: {colors['background']};
+            border: 1px solid {colors['border']};
+            padding: 10px 18px;
             margin-right: 2px;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            font-size: 13px;
+            color: {colors['text']};
         }}
         
         QTabBar::tab:selected {{
-            background-color: {cls.COLORS['primary']};
+            background-color: {colors['primary']};
             color: white;
         }}
         
         QTabBar::tab:hover {{
-            background-color: {cls.COLORS['hover']};
+            background-color: {colors['hover']};
         }}
         
-        /* Progress Bar */
+        /* Progress Bar - Enhanced */
         QProgressBar {{
-            border: 2px solid {cls.COLORS['border']};
-            border-radius: 5px;
+            border: 2px solid {colors['border']};
+            border-radius: 6px;
             text-align: center;
-            background-color: {cls.COLORS['background']};
+            background-color: {colors['background']};
+            font-size: 13px;
+            color: {colors['text']};
+            min-height: 20px;
         }}
         
         QProgressBar::chunk {{
-            background-color: {cls.COLORS['primary']};
-            border-radius: 3px;
-        }}
-        
-        /* Text Edit */
-        QTextEdit {{
-            border: 1px solid {cls.COLORS['border']};
+            background-color: {colors['primary']};
             border-radius: 4px;
-            background-color: {cls.COLORS['surface']};
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 10px;
         }}
         
-        /* Status Bar */
+        /* Text Edit - Enhanced */
+        QTextEdit {{
+            border: 1px solid {colors['border']};
+            border-radius: 6px;
+            background-color: {colors['surface']};
+            color: {colors['text']};
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            padding: 8px;
+        }}
+        
+        /* Status Bar - Enhanced */
         QStatusBar {{
-            background-color: {cls.COLORS['background']};
-            color: {cls.COLORS['text']};
-            border-top: 1px solid {cls.COLORS['border']};
+            background-color: {colors['background']};
+            color: {colors['text']};
+            border-top: 1px solid {colors['border']};
+            font-size: 13px;
         }}
         
         QStatusBar::item {{
             border: none;
         }}
         
-        /* Labels */
+        /* Labels - Enhanced */
         QLabel {{
-            color: {cls.COLORS['text']};
+            color: {colors['text']};
+            font-size: 13px;
         }}
         
-        /* Splitter */
+        /* Splitter - Enhanced */
         QSplitter::handle {{
-            background-color: {cls.COLORS['border']};
+            background-color: {colors['border']};
         }}
         
         QSplitter::handle:horizontal {{
@@ -243,37 +340,37 @@ class AppStyles:
             height: 3px;
         }}
         
-        /* Scroll Bars */
+        /* Scroll Bars - Enhanced */
         QScrollBar:vertical {{
-            background-color: {cls.COLORS['background']};
-            width: 12px;
-            border-radius: 6px;
+            background-color: {colors['background']};
+            width: 14px;
+            border-radius: 7px;
         }}
         
         QScrollBar::handle:vertical {{
-            background-color: {cls.COLORS['text_secondary']};
-            border-radius: 6px;
-            min-height: 20px;
+            background-color: {colors['text_secondary']};
+            border-radius: 7px;
+            min-height: 24px;
         }}
         
         QScrollBar::handle:vertical:hover {{
-            background-color: {cls.COLORS['text']};
+            background-color: {colors['text']};
         }}
         
         QScrollBar:horizontal {{
-            background-color: {cls.COLORS['background']};
-            height: 12px;
-            border-radius: 6px;
+            background-color: {colors['background']};
+            height: 14px;
+            border-radius: 7px;
         }}
         
         QScrollBar::handle:horizontal {{
-            background-color: {cls.COLORS['text_secondary']};
-            border-radius: 6px;
-            min-width: 20px;
+            background-color: {colors['text_secondary']};
+            border-radius: 7px;
+            min-width: 24px;
         }}
         
         QScrollBar::handle:horizontal:hover {{
-            background-color: {cls.COLORS['text']};
+            background-color: {colors['text']};
         }}
         
         QScrollBar::add-line, QScrollBar::sub-line {{

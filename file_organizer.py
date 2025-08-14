@@ -110,6 +110,17 @@ class FileOrganizerMainWindow(QMainWindow):
         
         toolbar_layout.addWidget(progress_group)
         
+        # Theme switcher section
+        theme_group = QGroupBox("Theme")
+        theme_layout = QHBoxLayout(theme_group)
+        
+        self.theme_combo = QComboBox()
+        self.theme_combo.addItems(["Light", "Dark"])
+        self.theme_combo.currentTextChanged.connect(self.change_theme)
+        theme_layout.addWidget(self.theme_combo)
+        
+        toolbar_layout.addWidget(theme_group)
+        
         return toolbar_widget
     
     def create_left_panel(self):
@@ -247,6 +258,13 @@ class FileOrganizerMainWindow(QMainWindow):
     def apply_styles(self):
         """Apply application styles."""
         self.setStyleSheet(AppStyles.get_main_style())
+    
+    def change_theme(self, theme_name):
+        """Change the application theme."""
+        theme = theme_name.lower()
+        AppStyles.set_theme(theme)
+        self.apply_styles()
+        logger.info(f"Theme changed to: {theme}")
     
     def browse_folder(self):
         """Open folder browser dialog."""
