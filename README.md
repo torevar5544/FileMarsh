@@ -15,8 +15,8 @@
 
 ### 1. Clone or Download the Project
 ```bash
-git clone <your-repo-url>
-cd file-organizer
+git clone https://github.com/torevar5544/FileMarsh.git
+cd FileMarsh
 ```
 
 ### 2. Create Virtual Environment (Recommended)
@@ -133,7 +133,7 @@ pytest tests/
 
 ## File Structure
 ```
-file-organizer/
+FileMarsh/
 ├── main.py                 # Application entry point
 ├── file_organizer.py       # Main window and UI
 ├── file_analyzer.py        # File analysis logic
