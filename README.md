@@ -1,4 +1,4 @@
-# File Organizer - Local Setup Guide
+# File Analyzer - Local Setup Guide
 
 ## System Requirements
 
